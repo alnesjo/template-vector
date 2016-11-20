@@ -27,27 +27,21 @@ namespace alnesjo {
     typedef std::reverse_iterator<iterator>       reverse_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
+                           /* Insert value at the end of vector. */
     void                   push_back(value_type value);
-                           /* Insert value at the end of vector.
-                            */
-    void                   insert(size_type pos, value_type value);
                            /* Insert value at pos. Will push back end-pos
-                            * elements.
-                            */
+                            * elements. */
+    void                   insert(size_type pos, value_type value);
+                           /* Clear vector such stat it's size becomes zero. */
     void                   clear(void);
-                           /* Clear vector such stat it's size becomes zero.
-                            */
-    void                   erase(size_type pos);
                            /* Erase vector entry at pos and pull back end-pos
-                            * elements.
-                            */
+                            * elements. */
+    void                   erase(size_type pos);
+                           /* The number of elements contained in vector. */
     size_type              size(void) const;
-                           /* The number of elements contained in vector.
-                            */
-    size_type              capacity(void) const;
                            /* The number of elements that can be held in
-                            * currently allocated storage.
-                            */
+                            * currently allocated storage. */
+    size_type              capacity(void) const;
     iterator               find(const_reference value);
     iterator               begin(void);
     iterator               end(void);
