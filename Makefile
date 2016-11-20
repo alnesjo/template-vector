@@ -3,9 +3,9 @@ SRC = vector-test.cpp
 OBJS = $(SRC:.cpp=.o)
 
 CO = g++
-CFLAGS = -Wall -std=c++0x -pedantic -g
+CFLAGS = -Wall -Werror -std=c++0x -pedantic -g
 LFLAGS =
-LINK_TARGET = simple_container
+LINK_TARGET = vector-test
 
 all : $(SRC) depend $(LINK_TARGET)
 

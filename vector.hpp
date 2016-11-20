@@ -10,10 +10,10 @@
 namespace alnesjo {
 
      template <typename T>
-     class Vector {
+     class vector {
           static_assert(std::is_move_constructible<T>::value &&
                         std::is_move_assignable<T>::value,
-                        "Vector requires value_type to be move -constructible "
+                        "vector requires value_type to be move -constructible "
                         "and -assignable");
      public:
           typedef T                                     value_type;
@@ -27,20 +27,28 @@ namespace alnesjo {
           typedef std::reverse_iterator<iterator>       reverse_iterator;
           typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
-          void                   push_back(value_type);
-          void                   insert(size_type, value_type);
+          void                   push_back(value_type value);
+          /* Insert value at the end of vector.
+           */
+          void                   insert(size_type pos, value_type value);
+          /* Insert value at pos. Will push back end-pos elements.
+           */
           void                   clear(void);
-          void                   erase(size_type);
+          /* Clear vector such stat it's size becomes zero.
+           */
+          void                   erase(size_type pos);
+          /* Erase vector entry at pos
+           */
           size_type              size(void) const;
           size_type              capacity(void) const;
 
-          iterator               find(const_reference);
+          iterator               find(const_reference value);
           iterator               begin(void);
           iterator               end(void);
           reverse_iterator       rbegin(void);
           reverse_iterator       rend(void);
 
-          const_iterator         find(const_reference) const;
+          const_iterator         find(const_reference value) const;
           const_iterator         begin(void) const;
           const_iterator         end(void) const;
           const_reverse_iterator rbegin(void) const;
@@ -48,26 +56,26 @@ namespace alnesjo {
 
           void                   reset(void);
 
-          reference              operator[](size_type);
-          const_reference        operator[](size_type) const;
+          reference              operator[](size_type pos);
+          const_reference        operator[](size_type pos) const;
 
-          Vector &               operator=(Vector const &);
-          Vector &               operator=(Vector &&);
+          vector &               operator=(vector const & other);
+          vector &               operator=(vector && other);
 
-          Vector(void);
-          Vector(size_type, value_type val = value_type());
-          Vector(Vector const &);
-          Vector(Vector &&);
-          Vector(std::initializer_list<value_type>);
-          ~Vector(void);
+          vector(void);
+          vector(size_type count, value_type value = value_type());
+          vector(vector const & other);
+          vector(vector && other);
+          vector(std::initializer_list<value_type>);
+          ~vector(void);
      protected:
           pointer                _array;
           size_type              _capacity;
           size_type              _size;
 
      private:
-          void                   _copy(Vector const &);
-          void                   _move(Vector &&);
+          void                   _copy(vector const &);
+          void                   _move(vector &&);
           void                   _realloc(size_type);
      };
 
@@ -75,57 +83,63 @@ namespace alnesjo {
 
 
      template <typename T>
-     inline void Vector<T>::push_back(value_type val) {
+     inline void vector<T>::push_back(value_type val) {
           insert(_size, val);
      }
 
      template <typename T>
-     inline void Vector<T>::insert(size_type index, value_type val) {
-          /* reallocate resources to two times the new size */
+     inline void vector<T>::insert(size_type pos, value_type value) {
+          if (pos < 0 || pos > _size) {
+               throw std::out_of_range("Trying to insert element at position: "
+                                       + std::to_string(pos) + ", in a vector "
+                                       "of size: " + std::to_string(size())
+                                       + ".");
+          }
           if (_size == _capacity) {
+               /* allocate more space */
                _realloc(_capacity ? _capacity*2 : 1);
           }
-          if (index < _size++) {
-               /* push back trailing elements */
-               iterator head, tail, tar = end() - index;
-               head = tail = begin();
-               for (head++; head != tar; *tail++ = *head++);
-          }
-          /* operator[] may throw out_of_range exception */
-          (*this)[index] = val;
+          ++_size;
+          reverse_iterator head, tail, tar = rbegin() - pos;
+          head = tail = rend();
+          /* push back trailing elements */
+          for (head++; head != tar; *tail++ = *head++);
+          _array[pos] = value;
      }
 
      template <typename T>
-     inline void Vector<T>::clear(void) {
+     inline void vector<T>::clear(void) {
           _size = 0;
      }
 
      template <typename T>
-     inline void Vector<T>::erase(size_type index) {
-          (*this)[index]; /* may throw out_of_range */
-          // If statement redundant if operator[] throws
-          if (index < _size-1) {
-               iterator head, tail, tar = end();
-               head = tail = begin() + index;
-               for (head++; head != tar; *tail++ = *head++);
+     inline void vector<T>::erase(size_type pos) {
+          if (pos < 0 || pos >= _size) {
+               throw std::out_of_range("Trying to erase element at position: "
+                                       + std::to_string(pos) + ", in a vector "
+                                       "of size: " + std::to_string(size())
+                                       + ".");
           }
+          iterator head, tail, tar = end();
+          head = tail = begin() + pos;
+          for (head++; head != tar; *tail++ = *head++);
           _size--;
      }
 
      template <typename T>
-     inline auto Vector<T>::size(void) const
+     inline auto vector<T>::size(void) const
           -> size_type {
           return _size;
      }
 
      template <typename T>
-     inline auto Vector<T>::capacity(void) const
+     inline auto vector<T>::capacity(void) const
           -> size_type {
           return _capacity;
      }
 
      template <typename T>
-     inline auto Vector<T>::find(const_reference ref)
+     inline auto vector<T>::find(const_reference ref)
           -> iterator {
           auto tar = end();
           for (auto it = begin(); it != tar; it++) {
@@ -138,7 +152,7 @@ namespace alnesjo {
      }
 
      template <typename T>
-     inline auto Vector<T>::find(const_reference ref) const
+     inline auto vector<T>::find(const_reference ref) const
           -> const_iterator {
           auto tar = end();
           for (auto it = begin(); it != tar; it++) {
@@ -151,62 +165,62 @@ namespace alnesjo {
      }
 
      template <typename T>
-     inline auto Vector<T>::begin(void)
+     inline auto vector<T>::begin(void)
           -> iterator {
           return _array;
      }
 
      template <typename T>
-     inline auto Vector<T>::end(void)
+     inline auto vector<T>::end(void)
           -> iterator {
           return _array+_size;
      }
 
      template <typename T>
-     inline auto Vector<T>::rbegin(void)
+     inline auto vector<T>::rbegin(void)
           -> reverse_iterator {
           return reverse_iterator(begin());
      }
 
      template <typename T>
-     inline auto Vector<T>::rend(void)
+     inline auto vector<T>::rend(void)
           -> reverse_iterator {
           return reverse_iterator(end());
      }
 
      template <typename T>
-     inline auto Vector<T>::begin(void) const
+     inline auto vector<T>::begin(void) const
           -> const_iterator {
           return _array;
      }
 
      template <typename T>
-     inline auto Vector<T>::end(void) const
+     inline auto vector<T>::end(void) const
           -> const_iterator {
           return _array+_size;
      }
 
      template <typename T>
-     inline auto Vector<T>::rbegin(void) const
+     inline auto vector<T>::rbegin(void) const
           -> const_reverse_iterator {
           return const_reverse_iterator(begin());
      }
 
      template <typename T>
-     inline auto Vector<T>::rend(void) const
+     inline auto vector<T>::rend(void) const
           -> const_reverse_iterator {
           return const_reverse_iterator(end());
      }
 
      template <typename T>
-     inline void Vector<T>::reset(void) {
+     inline void vector<T>::reset(void) {
           for (auto & elem : *this) {
                elem = value_type();
           }
      }
 
      template <typename T>
-     inline void Vector<T>::_copy(Vector<value_type> const & other) {
+     inline void vector<T>::_copy(vector<value_type> const & other) {
           /* allocate new resources and copy contents of other to this */
           _capacity = other._capacity;
           _size = other._size;
@@ -223,7 +237,7 @@ namespace alnesjo {
      }
 
      template <typename T>
-     inline void Vector<T>::_move(Vector<value_type> && other) {
+     inline void vector<T>::_move(vector<value_type> && other) {
           /* make a shallow copy of other and clear it's values */
           _capacity = other._capacity;
           _size = other._size;
@@ -234,7 +248,7 @@ namespace alnesjo {
      }
 
      template <typename T>
-     inline void Vector<T>::_realloc(size_type new_capacity) {
+     inline void vector<T>::_realloc(size_type new_capacity) {
           pointer new_array = new value_type [new_capacity];
           iterator it = new_array;
           for (auto & elem : *this) {
@@ -250,16 +264,19 @@ namespace alnesjo {
 /* Operators */
 
      template <typename T>
-     inline auto Vector<T>::operator[](size_type index)
+     inline auto vector<T>::operator[](size_type pos)
           -> reference {
-          if (index < 0 || index >= _size) {
-               throw std::out_of_range("OUT OF RANGE");
+          if (pos < 0 || pos >= _size) {
+               throw std::out_of_range("Trying to acess element at position: "
+                                       + std::to_string(pos) + ", in a vector "
+                                       "of size: " + std::to_string(size())
+                                       + ".");
           }
-          return _array[index];
+          return _array[pos];
      }
 
      template <typename T>
-     inline auto Vector<T>::operator[](size_type index) const
+     inline auto vector<T>::operator[](size_type index) const
           -> const_reference {
           if (index < 0 || index >= _size) {
                throw std::out_of_range("OUT OF RANGE");
@@ -268,8 +285,8 @@ namespace alnesjo {
      }
 
      template <typename T>
-     inline auto Vector<T>::operator=(Vector<value_type> const & other)
-          -> Vector<value_type> & {
+     inline auto vector<T>::operator=(vector<value_type> const & other)
+          -> vector<value_type> & {
           if (this != &other) {
                /* free existing dynamically allocated data */
                if (_capacity > 0) {
@@ -281,8 +298,8 @@ namespace alnesjo {
      }
 
      template <typename T>
-     inline auto Vector<T>::operator=(Vector<value_type> && other)
-          -> Vector<value_type> & {
+     inline auto vector<T>::operator=(vector<value_type> && other)
+          -> vector<value_type> & {
           if (this != &other) {
                /* free existing dynamically allocated data */
                if (_capacity > 0) {
@@ -296,10 +313,10 @@ namespace alnesjo {
 /* Constructors */
 
      template <typename T>
-     inline Vector<T>::Vector(void) : _array(nullptr), _capacity(0), _size(0) {}
+     inline vector<T>::vector(void) : _array(nullptr), _capacity(0), _size(0) {}
 
      template <typename T>
-     inline Vector<T>::Vector(size_type n, value_type val) {
+     inline vector<T>::vector(size_type n, value_type val) {
           _capacity = _size = n;
           if (_capacity > 0) {
                _array = new value_type [_capacity];
@@ -312,17 +329,17 @@ namespace alnesjo {
      }
 
      template <typename T>
-     inline Vector<T>::Vector(Vector const & src) {
+     inline vector<T>::vector(vector const & src) {
           _copy(src);
      }
 
      template <typename T>
-     inline Vector<T>::Vector(Vector && src) {
+     inline vector<T>::vector(vector && src) {
           _move(std::move(src));
      }
 
      template <typename T>
-     inline Vector<T>::Vector(std::initializer_list<value_type> il) {
+     inline vector<T>::vector(std::initializer_list<value_type> il) {
           _capacity = _size = il.size();
           if (_capacity > 0) {
                _array = new value_type [_capacity];
@@ -333,7 +350,7 @@ namespace alnesjo {
      }
 
      template <typename T>
-     inline Vector<T>::~Vector(void) {
+     inline vector<T>::~vector(void) {
           if (_capacity > 0) {
                delete [] _array;
           }
