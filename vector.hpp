@@ -13,7 +13,7 @@ namespace alnesjo {
   class vector {
     static_assert(std::is_move_constructible<T>::value &&
                   std::is_move_assignable<T>::value,
-                  "vector requires value_type to be move -constructible "
+                  "Vector requires value_type to be move -constructible "
                   "and -assignable");
   public:
     typedef T                                     value_type;
@@ -27,48 +27,59 @@ namespace alnesjo {
     typedef std::reverse_iterator<iterator>       reverse_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
-                           /* Insert value at the end of vector. */
-    void                   push_back(value_type value);
-                           /* Insert value at pos. Will push back end-pos
-                            * elements. */
-    void                   insert(size_type pos, value_type value);
-                           /* Clear vector such stat it's size becomes zero. */
-    void                   clear(void);
-                           /* Erase vector entry at pos and pull back end-pos
-                            * elements. */
-    void                   erase(size_type pos);
-                           /* The number of elements contained in vector. */
-    size_type              size(void) const;
-                           /* The number of elements that can be held in
-                            * currently allocated storage. */
-    size_type              capacity(void) const;
-    iterator               find(const_reference value);
-    iterator               begin(void);
-    iterator               end(void);
-    reverse_iterator       rbegin(void);
-    reverse_iterator       rend(void);
+    // Insert value at the end of vector.
+    void push_back(value_type value);
+    
+    // Insert value at pos. Will push back end-pos elements.
+    void insert(size_type pos, value_type value);
+    
+    // Clear vector such stat it's size becomes zero.
+    void clear(void);
+    
+    // Erase vector entry at pos and pull back end-pos elements.
+    void erase(size_type pos);
+    
+    // The number of elements contained in vector.
+    size_type size(void) const;
+    
+    // The number of elements that can be held in currently allocated storage.
+    size_type capacity(void) const;
+    
+    // Iterator of first element equal to value.
+    iterator find(const_reference value);
 
-    const_iterator         find(const_reference value) const;
-    const_iterator         begin(void) const;
-    const_iterator         end(void) const;
+    // Iterator at beginning of vector.
+    iterator begin(void);
+    
+    // Iterator at end (past last element) of vector.
+    iterator end(void);
+    
+    // Reverse iterator at beginning (past first element) of vector.
+    reverse_iterator rbegin(void);
+    // Reverse iterator at end of vector.
+    reverse_iterator rend(void);
+
+    const_iterator find(const_reference value) const;
+    const_iterator begin(void) const;
+    const_iterator end(void) const;
     const_reverse_iterator rbegin(void) const;
     const_reverse_iterator rend(void) const;
 
-    void                   reset(void);
+    void reset(void);
 
-    reference              operator[](size_type pos);
-    const_reference        operator[](size_type pos) const;
+    reference operator[](size_type pos);
+    const_reference operator[](size_type pos) const;
 
-    vector &               operator=(vector const & other);
-    vector &               operator=(vector && other);
+    vector & operator=(vector const & other);
+    vector & operator=(vector && other);
 
-                           vector(void);
-                           vector(size_type count,
-                                  value_type value = value_type());
-                           vector(vector const & other);
-                           vector(vector && other);
-                           vector(std::initializer_list<value_type>);
-                           ~vector(void);
+    vector(void);
+    vector(size_type count, value_type value = value_type());
+    vector(vector const & other);
+    vector(vector && other);
+    vector(std::initializer_list<value_type>);
+    ~vector(void);
+
   protected:
     pointer                _array;
     size_type              _capacity;
@@ -80,8 +91,7 @@ namespace alnesjo {
     void                   _realloc(size_type);
   };
 
-  /* Member functions */
-
+  // Methods
 
   template <typename T>
   inline void vector<T>::push_back(value_type val) {
@@ -97,13 +107,12 @@ namespace alnesjo {
                               + ".");
     }
     if (_size == _capacity) {
-      /* allocate more space */
       _realloc(_capacity ? _capacity*2 : 1);
     }
     ++_size;
     reverse_iterator head, tail, tar = rbegin() - pos;
     head = tail = rend();
-    /* push back trailing elements */
+    // push back trailing elements
     for (head++; head != tar; *tail++ = *head++);
     _array[pos] = value;
   }
@@ -123,6 +132,7 @@ namespace alnesjo {
     }
     iterator head, tail, tar = end();
     head = tail = begin() + pos;
+    // pull back trailing elements
     for (head++; head != tar; *tail++ = *head++);
     _size--;
   }
@@ -222,7 +232,7 @@ namespace alnesjo {
 
   template <typename T>
   inline void vector<T>::_copy(vector<value_type> const & other) {
-    /* allocate new resources and copy contents of other to this */
+    // allocate new resources and copy contents of other to this
     _capacity = other._capacity;
     _size = other._size;
     if (_capacity > 0) {
@@ -239,7 +249,6 @@ namespace alnesjo {
 
   template <typename T>
   inline void vector<T>::_move(vector<value_type> && other) {
-    /* make a shallow copy of other and clear it's values */
     _capacity = other._capacity;
     _size = other._size;
     _array = other._array;
@@ -262,7 +271,7 @@ namespace alnesjo {
     _capacity = new_capacity;
   }
 
-  /* Operators */
+  // Operators
 
   template <typename T>
   inline auto vector<T>::operator[](size_type pos)
@@ -289,7 +298,7 @@ namespace alnesjo {
   inline auto vector<T>::operator=(vector<value_type> const & other)
     -> vector<value_type> & {
     if (this != &other) {
-      /* free existing dynamically allocated data */
+      // free existing allocated storage
       if (_capacity > 0) {
         delete [] _array;
       }
@@ -302,7 +311,7 @@ namespace alnesjo {
   inline auto vector<T>::operator=(vector<value_type> && other)
     -> vector<value_type> & {
     if (this != &other) {
-      /* free existing dynamically allocated data */
+      // free existing allocated storage
       if (_capacity > 0) {
         delete [] _array;
       }
@@ -311,7 +320,7 @@ namespace alnesjo {
     return *this;
   }
 
-  /* Constructors */
+  // Constructors
 
   template <typename T>
   inline vector<T>::vector(void) : _array(nullptr), _capacity(0), _size(0) {}
