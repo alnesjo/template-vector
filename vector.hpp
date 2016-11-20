@@ -59,7 +59,7 @@ namespace alnesjo {
                                  Vector(Vector const &);
                                  Vector(Vector &&);
                                  Vector(std::initializer_list<value_type>);
-          ~Vector(void);
+                                 ~Vector(void);
      protected:
           pointer                _array;
           size_type              _capacity;
