@@ -54,11 +54,11 @@ namespace alnesjo {
           Vector &               operator=(Vector const &);
           Vector &               operator=(Vector &&);
 
-          Vector(void);
-          Vector(size_type, value_type val = value_type());
-          Vector(Vector const &);
-          Vector(Vector &&);
-          Vector(std::initializer_list<value_type>);
+                                 Vector(void);
+                                 Vector(size_type, value_type v = value_type());
+                                 Vector(Vector const &);
+                                 Vector(Vector &&);
+                                 Vector(std::initializer_list<value_type>);
           ~Vector(void);
      protected:
           pointer                _array;
