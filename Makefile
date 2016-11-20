@@ -1,16 +1,13 @@
-SRC = test_template_vec.cpp
+SRC = vector-test.cpp
 
 OBJS = $(SRC:.cpp=.o)
 
 CO = g++
 CFLAGS = -Wall -std=c++0x -pedantic -g
-LFLAGS = 
+LFLAGS =
 LINK_TARGET = simple_container
 
 all : $(SRC) depend $(LINK_TARGET)
-
-submit : kth_cprog_template_container.hpp
-	echo y | ~/scripts/submit.py $^ -p kth:cprog:templatevector -l c++
 
 clean :
 	rm -f $(LINK_TARGET) $(OBJS) ./.depend
