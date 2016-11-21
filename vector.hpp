@@ -16,15 +16,15 @@ namespace alnesjo {
                   "Vector requires value_type to be move -constructible "
                   "and -assignable");
   public:
-    typedef T                                     value_type;
-    typedef std::size_t                           size_type;
-    typedef value_type &                          reference;
-    typedef value_type const &                    const_reference;
-    typedef value_type *                          pointer;
-    typedef value_type const *                    const_pointer;
-    typedef pointer                               iterator;
-    typedef const_pointer                         const_iterator;
-    typedef std::reverse_iterator<iterator>       reverse_iterator;
+    typedef T value_type;
+    typedef std::size_t size_type;
+    typedef value_type & reference;
+    typedef value_type const & const_reference;
+    typedef value_type * pointer;
+    typedef value_type const * const_pointer;
+    typedef pointer iterator;
+    typedef const_pointer const_iterator;
+    typedef std::reverse_iterator<iterator> reverse_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
     // Insert value at the end of vector.
@@ -47,33 +47,43 @@ namespace alnesjo {
     
     // Iterator of first element equal to value.
     iterator find(const_reference value);
+    const_iterator find(const_reference value) const;
 
     // Iterator at beginning of vector.
     iterator begin(void);
+    const_iterator begin(void) const;
     
     // Iterator at end (past last element) of vector.
     iterator end(void);
+    const_iterator end(void) const;
     
     // Reverse iterator at beginning (past first element) of vector.
     reverse_iterator rbegin(void);
+    const_reverse_iterator rbegin(void) const;
+    
     // Reverse iterator at end of vector.
     reverse_iterator rend(void);
-
-    const_iterator find(const_reference value) const;
-    const_iterator begin(void) const;
-    const_iterator end(void) const;
-    const_reverse_iterator rbegin(void) const;
     const_reverse_iterator rend(void) const;
 
+    // Reset all elements to default value: value_type().
     void reset(void);
 
+    // Equivalent to: begin() + pos, but does range checking.
     reference operator[](size_type pos);
     const_reference operator[](size_type pos) const;
 
+    // Copy and move assignment, value_type is move assignable.
     vector & operator=(vector const & other);
     vector & operator=(vector && other);
 
+    ////////////////////////////////////////////////////////////////////////////
+    // CONSTRUCTORS
+    ////////////////////////////////////////////////////////////////////////////
+    
+    // Initialize with zero size and capacity.
     vector(void);
+    
+    //
     vector(size_type count, value_type value = value_type());
     vector(vector const & other);
     vector(vector && other);
