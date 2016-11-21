@@ -33,17 +33,16 @@ namespace alnesjo {
     // Count elements initialized to value
     Vector(size_type count, value_type value = value_type());
 
-    // Copy and move construction, value_type is move constructable.
-    Vector(Vector const & other);
-    Vector(Vector && other);
-
     // Vector containing initializer list elements, preserves order.
     Vector(std::initializer_list<value_type>);
-    ~Vector(void);
 
-    // Copy and move assignment, value_type is move assignable.
-    Vector & operator=(Vector const & other);
-    Vector & operator=(Vector && other);
+    // Copy and move construction/assignment.
+    Vector(Vector const & other);
+    Vector(Vector && other);
+    Vector & operator=(Vector other);
+    template <typename U> friend void swap(Vector<U> &, Vector<U> &);
+
+    ~Vector(void);
 
     // Insert value at the end of vector.
     void push_back(value_type value);
@@ -96,8 +95,6 @@ namespace alnesjo {
     size_type _size;
 
   private:
-    void _copy(Vector const &);
-    void _move(Vector &&);
     void _realloc(size_type);
   };
 
@@ -118,16 +115,6 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline Vector<T>::Vector(Vector const & src) {
-    _copy(src);
-  }
-
-  template <typename T>
-  inline Vector<T>::Vector(Vector && src) {
-    _move(std::move(src));
-  }
-
-  template <typename T>
   inline Vector<T>::Vector(std::initializer_list<value_type> il) {
     _capacity = _size = il.size();
     if (_capacity > 0) {
@@ -139,6 +126,28 @@ namespace alnesjo {
   }
 
   template <typename T>
+  inline Vector<T>::Vector(Vector const & other) {
+    // allocate new resources and copy contents of other to this
+    _capacity = other._capacity;
+    _size = other._size;
+    if (_capacity > 0) {
+      _array = new value_type [_capacity];
+      iterator dest = begin();
+      const_iterator src = other.begin();
+      while(dest != end()) {
+        *dest++ = *src++;
+      }
+    } else {
+      _array = nullptr;
+    }
+  }
+
+  template <typename T>
+  inline Vector<T>::Vector(Vector && other) : Vector() {
+    swap(*this, other);
+  }
+
+  template <typename T>
   inline Vector<T>::~Vector(void) {
     if (_capacity > 0) {
       delete [] _array;
@@ -146,29 +155,17 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline auto Vector<T>::operator=(Vector<value_type> const & other)
+  inline auto Vector<T>::operator=(Vector<value_type> other)
     -> Vector<value_type> & {
-    if (this != &other) {
-      // free existing allocated storage
-      if (_capacity > 0) {
-        delete [] _array;
-      }
-      _copy(other);
-    }
+    swap(*this, other);
     return *this;
   }
 
   template <typename T>
-  inline auto Vector<T>::operator=(Vector<value_type> && other)
-    -> Vector<value_type> & {
-    if (this != &other) {
-      // free existing allocated storage
-      if (_capacity > 0) {
-        delete [] _array;
-      }
-      _move(std::move(other));
-    }
-    return *this;
+  void swap(Vector<T> & lhs, Vector<T> & rhs) {
+    std::swap(lhs._capacity, rhs._capacity);
+    std::swap(lhs._size, rhs._size);
+    std::swap(lhs._array, rhs._array);
   }
 
   template <typename T>
@@ -327,33 +324,6 @@ namespace alnesjo {
       throw std::out_of_range("OUT OF RANGE");
     }
     return _array[index];
-  }
-
-  template <typename T>
-  inline void Vector<T>::_copy(Vector<value_type> const & other) {
-    // allocate new resources and copy contents of other to this
-    _capacity = other._capacity;
-    _size = other._size;
-    if (_capacity > 0) {
-      _array = new value_type [_capacity];
-      iterator dest = begin();
-      const_iterator src = other.begin();
-      while(dest != end()) {
-        *dest++ = *src++;
-      }
-    } else {
-      _array = nullptr;
-    }
-  }
-
-  template <typename T>
-  inline void Vector<T>::_move(Vector<value_type> && other) {
-    _capacity = other._capacity;
-    _size = other._size;
-    _array = other._array;
-    other._capacity = 0;
-    other._size = 0;
-    other._array = nullptr;
   }
 
   template <typename T>
