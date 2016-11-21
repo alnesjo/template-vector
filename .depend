@@ -1,1 +1,0 @@
-vector-test.o: src/vector-test.cpp src/vector.hpp
