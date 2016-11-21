@@ -11,6 +11,11 @@ namespace alnesjo {
 
   template <typename T>
   class Vector {
+    pointer _array;
+    size_type _capacity;
+    size_type _size;
+    void _realloc(size_type);
+    template <typename U> friend void swap(Vector<U> &, Vector<U> &);
     static_assert(std::is_move_constructible<T>::value &&
                   std::is_move_assignable<T>::value,
                   "Vector requires value_type to be move -constructible "
@@ -40,7 +45,6 @@ namespace alnesjo {
     Vector(Vector const & other);
     Vector(Vector && other);
     Vector & operator=(Vector other);
-    template <typename U> friend void swap(Vector<U> &, Vector<U> &);
 
     ~Vector(void);
 
@@ -88,14 +92,6 @@ namespace alnesjo {
     // Equivalent to: begin() + pos, but does range checking.
     reference operator[](size_type pos);
     const_reference operator[](size_type pos) const;
-
-  protected:
-    pointer _array;
-    size_type _capacity;
-    size_type _size;
-
-  private:
-    void _realloc(size_type);
   };
 
   template <typename T>
