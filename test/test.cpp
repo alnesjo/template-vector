@@ -1,5 +1,5 @@
-#include "vector.hpp"             // inkludera din headerfil här
-#include <assert.h>             // assert(b) ger felmeddelande om b falsk
+#include "vector.hpp"
+#include <assert.h>
 #include <iostream>
 
 using std::cout;
