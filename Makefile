@@ -80,14 +80,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/robert/Documents/template-vector && $(CMAKE_COMMAND) -E cmake_progress_start /home/robert/Documents/template-vector/CMakeFiles /home/robert/Documents/template-vector/src/CMakeFiles/progress.marks
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/robert/Documents/template-vector/CMakeFiles /home/robert/Documents/template-vector/CMakeFiles/progress.marks
+	$(MAKE) -f CMakeFiles/Makefile2 all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/robert/Documents/template-vector/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/clean
+	$(MAKE) -f CMakeFiles/Makefile2 clean
 .PHONY : clean
 
 # The main clean target
@@ -97,33 +97,44 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	$(MAKE) -f CMakeFiles/Makefile2 preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	$(MAKE) -f CMakeFiles/Makefile2 preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/robert/Documents/template-vector && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-# Convenience name for target.
-src/CMakeFiles/vector.dir/rule:
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/vector.dir/rule
-.PHONY : src/CMakeFiles/vector.dir/rule
+#=============================================================================
+# Target rules for targets named vector
 
-# Convenience name for target.
-vector: src/CMakeFiles/vector.dir/rule
-
+# Build rule for target.
+vector: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 vector
 .PHONY : vector
 
 # fast build rule for target.
 vector/fast:
-	cd /home/robert/Documents/template-vector && $(MAKE) -f src/CMakeFiles/vector.dir/build.make src/CMakeFiles/vector.dir/build
+	$(MAKE) -f src/CMakeFiles/vector.dir/build.make src/CMakeFiles/vector.dir/build
 .PHONY : vector/fast
+
+#=============================================================================
+# Target rules for targets named vector-test
+
+# Build rule for target.
+vector-test: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 vector-test
+.PHONY : vector-test
+
+# fast build rule for target.
+vector-test/fast:
+	$(MAKE) -f test/CMakeFiles/vector-test.dir/build.make test/CMakeFiles/vector-test.dir/build
+.PHONY : vector-test/fast
 
 # Help Target
 help:
@@ -134,6 +145,7 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... vector"
+	@echo "... vector-test"
 .PHONY : help
 
 
@@ -145,6 +157,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/robert/Documents/template-vector && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	$(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

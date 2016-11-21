@@ -80,14 +80,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/robert/Documents/template-vector && $(CMAKE_COMMAND) -E cmake_progress_start /home/robert/Documents/template-vector/CMakeFiles /home/robert/Documents/template-vector/src/CMakeFiles/progress.marks
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/all
+	cd /home/robert/Documents/template-vector && $(CMAKE_COMMAND) -E cmake_progress_start /home/robert/Documents/template-vector/CMakeFiles /home/robert/Documents/template-vector/test/CMakeFiles/progress.marks
+	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 test/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/robert/Documents/template-vector/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/clean
+	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 test/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,12 +97,12 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/preinstall
+	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
@@ -111,19 +111,46 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-src/CMakeFiles/vector.dir/rule:
-	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 src/CMakeFiles/vector.dir/rule
-.PHONY : src/CMakeFiles/vector.dir/rule
+test/CMakeFiles/vector-test.dir/rule:
+	cd /home/robert/Documents/template-vector && $(MAKE) -f CMakeFiles/Makefile2 test/CMakeFiles/vector-test.dir/rule
+.PHONY : test/CMakeFiles/vector-test.dir/rule
 
 # Convenience name for target.
-vector: src/CMakeFiles/vector.dir/rule
+vector-test: test/CMakeFiles/vector-test.dir/rule
 
-.PHONY : vector
+.PHONY : vector-test
 
 # fast build rule for target.
-vector/fast:
-	cd /home/robert/Documents/template-vector && $(MAKE) -f src/CMakeFiles/vector.dir/build.make src/CMakeFiles/vector.dir/build
-.PHONY : vector/fast
+vector-test/fast:
+	cd /home/robert/Documents/template-vector && $(MAKE) -f test/CMakeFiles/vector-test.dir/build.make test/CMakeFiles/vector-test.dir/build
+.PHONY : vector-test/fast
+
+test.o: test.cpp.o
+
+.PHONY : test.o
+
+# target to build an object file
+test.cpp.o:
+	cd /home/robert/Documents/template-vector && $(MAKE) -f test/CMakeFiles/vector-test.dir/build.make test/CMakeFiles/vector-test.dir/test.cpp.o
+.PHONY : test.cpp.o
+
+test.i: test.cpp.i
+
+.PHONY : test.i
+
+# target to preprocess a source file
+test.cpp.i:
+	cd /home/robert/Documents/template-vector && $(MAKE) -f test/CMakeFiles/vector-test.dir/build.make test/CMakeFiles/vector-test.dir/test.cpp.i
+.PHONY : test.cpp.i
+
+test.s: test.cpp.s
+
+.PHONY : test.s
+
+# target to generate assembly for a file
+test.cpp.s:
+	cd /home/robert/Documents/template-vector && $(MAKE) -f test/CMakeFiles/vector-test.dir/build.make test/CMakeFiles/vector-test.dir/test.cpp.s
+.PHONY : test.cpp.s
 
 # Help Target
 help:
@@ -133,7 +160,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... vector"
+	@echo "... vector-test"
+	@echo "... test.o"
+	@echo "... test.i"
+	@echo "... test.s"
 .PHONY : help
 
 
