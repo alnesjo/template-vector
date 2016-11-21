@@ -5,13 +5,14 @@
 using std::cout;
 using std::endl;
 using std::out_of_range;
+using std::move;
 using alnesjo::vector;
 
 vector<int> v;
 
 int main() {
   {
-    v = vector({1,2,3,4});
+    v = vector<int>({1,2,3,4});
     assert(v[0]==1);
     assert(v[1]==2);
     assert(v[2]==3);
@@ -52,12 +53,18 @@ int main() {
     cout << "OK: erase" << endl;
   }
   {
-    vector<int> u = v;
+    vector<int> u(v);
     assert(v[0]==u[0]);
     assert(v[1]==u[1]);
     assert(v[2]==u[2]);
     assert(v[3]==u[3]);
     cout << "OK: copy" << endl;
+    v = move(u);
+    assert(v[0]==1);
+    assert(v[1]==2);
+    assert(v[2]==3);
+    assert(v[3]==4);
+    cout << "OK: move" << endl;
   }
   {
     auto f1 = v.find(1);
