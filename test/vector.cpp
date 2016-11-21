@@ -1,20 +1,17 @@
 #include "gtest/gtest.h"
 #include "vector.hpp"
 
-TEST(VectorTest, PushBack) {
-  alnesjo::Vector<int> v;
-  for (int i = 0; i < 10; i++) {
-    v.push_back(i);
-  }
-  EXPECT_EQ(9, v[9]);
-  EXPECT_EQ(4, v[4]);
-}
-
 TEST(VectorTest, SizeConstructor) {
   alnesjo::Vector<int> v(10);
   for (int i = 0; i < 10; i++) {
     EXPECT_EQ(0, v[i]);
   }
+}
+
+TEST(VectorTest, InitializerListConstructor) {
+  alnesjo::Vector<char const *> v({"Hej!", "Jag vill", "ingen", "illa."});
+  EXPECT_STREQ("Hej!", v[0]);
+  EXPECT_STREQ("illa.", v[3]);
 }
 
 TEST(VectorTest, CopyConstructor) {
@@ -40,12 +37,14 @@ TEST(VectorTest, MoveConstructor) {
   EXPECT_EQ(it, v.begin());
 }
 
-TEST(VectorTest, InitializerListConstructor) {
-  alnesjo::Vector<char const *> v({"Hej!", "Jag vill", "ingen", "illa."});
-  EXPECT_STREQ("Hej!", v[0]);
-  EXPECT_STREQ("illa.", v[3]);
+TEST(VectorTest, PushBack) {
+  alnesjo::Vector<int> v;
+  for (int i = 0; i < 10; i++) {
+    v.push_back(i);
+  }
+  EXPECT_EQ(9, v[9]);
+  EXPECT_EQ(4, v[4]);
 }
-
 
 TEST(VectorTest, InsertAtFront) {
   alnesjo::Vector<int> v;
@@ -56,11 +55,5 @@ TEST(VectorTest, InsertAtFront) {
   EXPECT_EQ(5, v[4]);
 }
 
-TEST(VectorTest, Clear) {
-  alnesjo::Vector<int> v;
-  for (int i = 0; i < 10; i++) {
-    v.insert(0,i);
-  }
-  EXPECT_EQ(0, v[9]);
-  EXPECT_EQ(5, v[4]);
+TEST(VectorTest, TODO) {
 }
