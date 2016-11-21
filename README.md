@@ -1,5 +1,12 @@
 # template-vector
 
+Slightly modified and upgraded homework assignment from 
+DD2387 Program System Construction Using C++
+.
+Using Google's C++ testing framework to somewhat assert correct behaviour.
+
+Build instructions:
+
     mkdir build
     cd build
     cmake ..
