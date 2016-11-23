@@ -6,15 +6,12 @@
 #include <stdexcept>
 #include <initializer_list>
 #include <type_traits>
+#include <iterator>
 
 namespace alnesjo {
 
   template <typename T>
   class Vector {
-    pointer _array;
-    size_type _capacity;
-    size_type _size;
-    void _realloc(size_type);
     template <typename U> friend void swap(Vector<U> &, Vector<U> &);
     static_assert(std::is_move_constructible<T>::value &&
                   std::is_move_assignable<T>::value,
@@ -31,6 +28,7 @@ namespace alnesjo {
     typedef const_pointer const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+  public:
 
     // Empty vector with zero capacity.
     Vector(void);
@@ -92,7 +90,31 @@ namespace alnesjo {
     // Equivalent to: begin() + pos, but does range checking.
     reference operator[](size_type pos);
     const_reference operator[](size_type pos) const;
+
+  private:
+    pointer _array;
+    size_type _capacity;
+    size_type _size;
+    void _realloc(size_type);
   };
+
+  template <typename It> void lshift(It begin, It end) {
+    It trailer = begin, header = begin + 1;
+    auto shifter = *begin;
+    for (; header != end; *trailer++ = *header++);
+    *(end-1) = shifter;
+  }
+
+  template <typename It> void rshift(It begin, It end) {
+    lshift(std::reverse_iterator<It>(end), std::reverse_iterator<It>(begin));
+  }
+
+  template <typename T>
+  void swap(Vector<T> & lhs, Vector<T> & rhs) {
+    std::swap(lhs._capacity, rhs._capacity);
+    std::swap(lhs._size, rhs._size);
+    std::swap(lhs._array, rhs._array);
+  }
 
   template <typename T>
   inline Vector<T>::Vector(void) : _array(nullptr), _capacity(0), _size(0) {}
@@ -158,13 +180,6 @@ namespace alnesjo {
   }
 
   template <typename T>
-  void swap(Vector<T> & lhs, Vector<T> & rhs) {
-    std::swap(lhs._capacity, rhs._capacity);
-    std::swap(lhs._size, rhs._size);
-    std::swap(lhs._array, rhs._array);
-  }
-
-  template <typename T>
   inline void Vector<T>::push_back(value_type val) {
     insert(_size, val);
   }
@@ -181,10 +196,11 @@ namespace alnesjo {
       _realloc(_capacity ? _capacity*2 : 1);
     }
     _size++;
-    reverse_iterator head, tail, tar = rbegin() - pos;
-    head = tail = rend();
+    // reverse_iterator head, tail, tar = rbegin() - pos;
+    // head = tail = rend();
+    // for (head++; head != tar; *tail++ = *head++);
     // push back trailing elements
-    for (head++; head != tar; *tail++ = *head++);
+    rshift(begin() + pos, end());
     _array[pos] = value;
   }
 
@@ -201,10 +217,11 @@ namespace alnesjo {
                               "of size: " + std::to_string(size())
                               + ".");
     }
-    iterator head, tail, tar = end();
-    head = tail = begin() + pos;
+    // iterator head, tail, tar = end();
+    // head = tail = begin() + pos;
+    // for (head++; head != tar; *tail++ = *head++);
     // pull back trailing elements
-    for (head++; head != tar; *tail++ = *head++);
+    lshift(begin() + pos, end());
     _size--;
   }
 

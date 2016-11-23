@@ -57,3 +57,39 @@ TEST(VectorTest, InsertAtFront) {
 
 TEST(VectorTest, TODO) {
 }
+
+TEST(LShiftTest, VectorIterator) {
+  alnesjo::Vector<int> v({1,2,3,4,5,6});
+  alnesjo::lshift(v.begin(), v.end());
+  EXPECT_EQ(2, v[0]);
+  EXPECT_EQ(3, v[1]);
+  EXPECT_EQ(4, v[2]);
+  EXPECT_EQ(5, v[3]);
+  EXPECT_EQ(6, v[4]);
+  EXPECT_EQ(1, v[5]);
+}
+
+TEST(LShiftTest, VectorReverseIterator) {
+  alnesjo::Vector<int> v({1,2,3,4,5,6});
+  alnesjo::lshift(v.rend(), v.rbegin());
+  EXPECT_EQ(6, v[0]);
+  EXPECT_EQ(1, v[1]);
+  EXPECT_EQ(2, v[2]);
+  EXPECT_EQ(3, v[3]);
+  EXPECT_EQ(4, v[4]);
+  EXPECT_EQ(5, v[5]);
+}
+
+TEST(ShiftTest, VectorBackAndForth) {
+  alnesjo::Vector<int> v({1,2,3,4,5,6});
+  alnesjo::lshift(v.begin(), v.end());
+  alnesjo::rshift(v.begin(), v.end());
+  alnesjo::rshift(v.begin(), v.end());
+  alnesjo::lshift(v.begin(), v.end());
+  EXPECT_EQ(1, v[0]);
+  EXPECT_EQ(2, v[1]);
+  EXPECT_EQ(3, v[2]);
+  EXPECT_EQ(4, v[3]);
+  EXPECT_EQ(5, v[4]);
+  EXPECT_EQ(6, v[5]);
+}
