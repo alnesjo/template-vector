@@ -130,25 +130,17 @@ namespace alnesjo {
   template <typename T>
   inline Vector<T>::Vector(size_type n, value_type val) {
     _capacity = _size = n;
-    if (_capacity > 0) {
-      _array = new value_type [_capacity];
-      for (auto & elem : *this) {
-        elem = val;
-      }
-    } else {
-      _array = nullptr;
+    _array = new value_type [_capacity];
+    for (auto & elem : *this) {
+      elem = val;
     }
   }
 
   template <typename T>
   inline Vector<T>::Vector(std::initializer_list<value_type> il) {
     _capacity = _size = il.size();
-    if (_capacity > 0) {
-      _array = new value_type [_capacity];
-      std::copy(il.begin(), il.end(), begin());
-    } else {
-      _array = nullptr;
-    }
+    _array = new value_type [_capacity];
+    std::copy(il.begin(), il.end(), begin());
   }
 
   template <typename T>
@@ -156,12 +148,8 @@ namespace alnesjo {
     // allocate new resources and copy contents of other to this
     _capacity = other._capacity;
     _size = other._size;
-    if (_capacity > 0) {
-      _array = new value_type [_capacity];
-      std::copy(other.begin(), other.end(), begin());
-    } else {
-      _array = nullptr;
-    }
+    _array = new value_type [_capacity];
+    std::copy(other.begin(), other.end(), begin());
   }
 
   template <typename T>
@@ -171,9 +159,7 @@ namespace alnesjo {
 
   template <typename T>
   inline Vector<T>::~Vector(void) {
-    if (_capacity > 0) {
-      delete [] _array;
-    }
+    delete [] _array;
   }
 
   template <typename T>
@@ -339,9 +325,7 @@ namespace alnesjo {
   inline void Vector<T>::_realloc(size_type new_capacity) {
     pointer const new_array = new value_type [new_capacity];
     std::copy(begin(), end(), new_array);
-    if (_capacity > 0) {
-      delete [] _array;
-    }
+    delete [] _array;
     _array = new_array;
     _capacity = new_capacity;
   }
