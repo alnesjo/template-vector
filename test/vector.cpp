@@ -23,7 +23,7 @@ TEST(VectorTest, CopyConstructor) {
     EXPECT_EQ(v[i], u[i]);
   }
   EXPECT_EQ(v.size(), u.size());
-  v.reset();
+  v.fill(0);
   v.clear();
   for (int i = 0; i < 10; i++) {
     EXPECT_EQ(7, u[i]);
@@ -55,12 +55,19 @@ TEST(VectorTest, InsertAtFront) {
   EXPECT_EQ(5, v[4]);
 }
 
-TEST(VectorTest, TODO) {
+TEST(VectorTest, Find) {
+  alnesjo::Vector<int> v({1,2,3,4,5,6});
+  EXPECT_EQ(v.begin()+0, v.find(1));
+  EXPECT_EQ(v.begin()+1, v.find(2));
+  EXPECT_EQ(v.begin()+2, v.find(3));
+  EXPECT_EQ(v.begin()+3, v.find(4));
+  EXPECT_EQ(v.begin()+4, v.find(5));
+  EXPECT_EQ(v.begin()+5, v.find(6));
 }
 
-TEST(LShiftTest, VectorIterator) {
+TEST(LeftShiftTest, VectorIterator) {
   alnesjo::Vector<int> v({1,2,3,4,5,6});
-  alnesjo::lshift(v.begin(), v.end());
+  alnesjo::left_shift(v.begin(), v.end());
   EXPECT_EQ(2, v[0]);
   EXPECT_EQ(3, v[1]);
   EXPECT_EQ(4, v[2]);
@@ -69,9 +76,9 @@ TEST(LShiftTest, VectorIterator) {
   EXPECT_EQ(1, v[5]);
 }
 
-TEST(LShiftTest, VectorReverseIterator) {
+TEST(LeftShiftTest, VectorReverseIterator) {
   alnesjo::Vector<int> v({1,2,3,4,5,6});
-  alnesjo::lshift(v.rend(), v.rbegin());
+  alnesjo::left_shift(v.rend(), v.rbegin());
   EXPECT_EQ(6, v[0]);
   EXPECT_EQ(1, v[1]);
   EXPECT_EQ(2, v[2]);
@@ -82,10 +89,10 @@ TEST(LShiftTest, VectorReverseIterator) {
 
 TEST(ShiftTest, VectorBackAndForth) {
   alnesjo::Vector<int> v({1,2,3,4,5,6});
-  alnesjo::lshift(v.begin(), v.end());
-  alnesjo::rshift(v.begin(), v.end());
-  alnesjo::rshift(v.begin(), v.end());
-  alnesjo::lshift(v.begin(), v.end());
+  alnesjo::left_shift(v.begin(), v.end());
+  alnesjo::right_shift(v.begin(), v.end());
+  alnesjo::right_shift(v.begin(), v.end());
+  alnesjo::left_shift(v.begin(), v.end());
   EXPECT_EQ(1, v[0]);
   EXPECT_EQ(2, v[1]);
   EXPECT_EQ(3, v[2]);

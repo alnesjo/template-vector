@@ -7,13 +7,14 @@
 #include <initializer_list>
 #include <type_traits>
 #include <iterator>
+#include <algorithm>
 
 namespace alnesjo {
 
   // Shifts elements ranging between begin and end by one step
   // TODO: Should probably be moved to another header
-  template <typename It> void lshift(It begin, It end);
-  template <typename It> void rshift(It begin, It end);
+  template <typename It> void left_shift(It begin, It end);
+  template <typename It> void right_shift(It begin, It end);
 
   template <typename T>
   class Vector {
@@ -63,8 +64,8 @@ namespace alnesjo {
     // Erase vector entry at pos and pull back end-pos elements.
     void erase(size_type pos);
 
-    // Reset all elements to default value: value_type().
-    void reset(void);
+    // Set all elements to value.
+    void fill(const_reference value);
 
     // The number of elements contained in vector.
     size_type size(void) const;
@@ -106,15 +107,15 @@ namespace alnesjo {
     void _realloc(size_type capacity);
   };
 
-  template <typename It> void lshift(It begin, It end) {
+  template <typename It> void left_shift(It begin, It end) {
     It trailer = begin, header = begin + 1;
     auto shifter = *begin;
     for (; header != end; *trailer++ = *header++);
     *(end-1) = shifter;
   }
 
-  template <typename It> void rshift(It begin, It end) {
-    lshift(std::reverse_iterator<It>(end), std::reverse_iterator<It>(begin));
+  template <typename It> void right_shift(It begin, It end) {
+    left_shift(std::reverse_iterator<It>(end), std::reverse_iterator<It>(begin));
   }
 
   template <typename T>
@@ -184,7 +185,7 @@ namespace alnesjo {
       _realloc(_capacity ? _capacity*2 : 1);
     }
     _size++;
-    rshift(begin() + pos, end());
+    right_shift(begin() + pos, end());
     _array[pos] = value;
   }
 
@@ -201,13 +202,13 @@ namespace alnesjo {
                               "of size: " + std::to_string(size())
                               + ".");
     }
-    lshift(begin() + pos, end());
+    left_shift(begin() + pos, end());
     _size--;
   }
 
   template <typename T>
-  inline void Vector<T>::reset(void) {
-    std::fill(begin(), end(), value_type());
+  inline void Vector<T>::fill(const_reference value) {
+    std::fill(begin(), end(), value);
   }
 
   template <typename T>
@@ -225,6 +226,7 @@ namespace alnesjo {
   template <typename T>
   inline auto Vector<T>::find(const_reference ref)
     -> iterator {
+    /*
     auto tar = end();
     for (auto it = begin(); it != tar; it++) {
       if (*it == ref) {
@@ -233,19 +235,14 @@ namespace alnesjo {
       }
     }
     return tar;
+    */
+    return std::find(begin(), end(), ref);
   }
 
   template <typename T>
   inline auto Vector<T>::find(const_reference ref) const
     -> const_iterator {
-    auto tar = end();
-    for (auto it = begin(); it != tar; it++) {
-      if (*it == ref) {
-        tar = it;
-        break;
-      }
-    }
-    return tar;
+    return std::find(begin(), end(), ref);
   }
 
   template <typename T>
