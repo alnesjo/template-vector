@@ -6,15 +6,12 @@
 #include <stdexcept>
 #include <initializer_list>
 #include <type_traits>
-#include <iterator>
 #include <algorithm>
 
 namespace alnesjo {
 
   // Shifts elements ranging between begin and end by one step
   // TODO: Should probably be moved to another header
-  template <typename It> void left_shift(It begin, It end);
-  template <typename It> void right_shift(It begin, It end);
 
   template <typename T>
   class vector {
@@ -107,17 +104,6 @@ namespace alnesjo {
     void _realloc(size_type capacity);
   };
 
-  template <typename It> void left_shift(It begin, It end) {
-    It trailer = begin, header = begin + 1;
-    auto shifter = *begin;
-    for (; header != end; *trailer++ = *header++);
-    *(end-1) = shifter;
-  }
-
-  template <typename It> void right_shift(It begin, It end) {
-    left_shift(std::reverse_iterator<It>(end), std::reverse_iterator<It>(begin));
-  }
-
   template <typename T>
   void swap(vector<T> & lhs, vector<T> & rhs) {
     std::swap(lhs._capacity, rhs._capacity);
@@ -185,7 +171,7 @@ namespace alnesjo {
       _realloc(_capacity ? _capacity*2 : 1);
     }
     _size++;
-    right_shift(begin() + pos, end());
+    std::rotate(rend(), rend()+1, rbegin()-pos);
     _array[pos] = value;
   }
 
@@ -202,7 +188,7 @@ namespace alnesjo {
                               "of size: " + std::to_string(size())
                               + ".");
     }
-    left_shift(begin() + pos, end());
+    std::rotate(begin()+pos, begin()+pos+1, end());
     _size--;
   }
 

@@ -64,39 +64,3 @@ TEST(VectorTest, Find) {
   EXPECT_EQ(v.begin()+4, v.find(5));
   EXPECT_EQ(v.begin()+5, v.find(6));
 }
-
-TEST(LeftShiftTest, VectorIterator) {
-  alnesjo::vector<int> v({1,2,3,4,5,6});
-  alnesjo::left_shift(v.begin(), v.end());
-  EXPECT_EQ(2, v[0]);
-  EXPECT_EQ(3, v[1]);
-  EXPECT_EQ(4, v[2]);
-  EXPECT_EQ(5, v[3]);
-  EXPECT_EQ(6, v[4]);
-  EXPECT_EQ(1, v[5]);
-}
-
-TEST(LeftShiftTest, VectorReverseIterator) {
-  alnesjo::vector<int> v({1,2,3,4,5,6});
-  alnesjo::left_shift(v.rend(), v.rbegin());
-  EXPECT_EQ(6, v[0]);
-  EXPECT_EQ(1, v[1]);
-  EXPECT_EQ(2, v[2]);
-  EXPECT_EQ(3, v[3]);
-  EXPECT_EQ(4, v[4]);
-  EXPECT_EQ(5, v[5]);
-}
-
-TEST(ShiftTest, VectorBackAndForth) {
-  alnesjo::vector<int> v({1,2,3,4,5,6});
-  alnesjo::left_shift(v.begin(), v.end());
-  alnesjo::right_shift(v.begin(), v.end());
-  alnesjo::right_shift(v.begin(), v.end());
-  alnesjo::left_shift(v.begin(), v.end());
-  EXPECT_EQ(1, v[0]);
-  EXPECT_EQ(2, v[1]);
-  EXPECT_EQ(3, v[2]);
-  EXPECT_EQ(4, v[3]);
-  EXPECT_EQ(5, v[4]);
-  EXPECT_EQ(6, v[5]);
-}
