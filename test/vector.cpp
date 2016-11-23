@@ -2,20 +2,20 @@
 #include "vector.hpp"
 
 TEST(VectorTest, SizeConstructor) {
-  alnesjo::Vector<int> v(10);
+  alnesjo::vector<int> v(10);
   for (int i = 0; i < 10; i++) {
     EXPECT_EQ(0, v[i]);
   }
 }
 
 TEST(VectorTest, InitializerListConstructor) {
-  alnesjo::Vector<char const *> v({"Hej!", "Jag vill", "ingen", "illa."});
+  alnesjo::vector<char const *> v({"Hej!", "Jag vill", "ingen", "illa."});
   EXPECT_STREQ("Hej!", v[0]);
   EXPECT_STREQ("illa.", v[3]);
 }
 
 TEST(VectorTest, CopyConstructor) {
-  alnesjo::Vector<int> u(10,7), v;
+  alnesjo::vector<int> u(10,7), v;
   auto it = u.begin();
   v = u;
   EXPECT_NE(it, v.begin());
@@ -31,14 +31,14 @@ TEST(VectorTest, CopyConstructor) {
 }
 
 TEST(VectorTest, MoveConstructor) {
-  alnesjo::Vector<int> u(10,7), v;
+  alnesjo::vector<int> u(10,7), v;
   auto it = u.begin();
   v = std::move(u);
   EXPECT_EQ(it, v.begin());
 }
 
 TEST(VectorTest, PushBack) {
-  alnesjo::Vector<int> v;
+  alnesjo::vector<int> v;
   for (int i = 0; i < 10; i++) {
     v.push_back(i);
   }
@@ -47,7 +47,7 @@ TEST(VectorTest, PushBack) {
 }
 
 TEST(VectorTest, InsertAtFront) {
-  alnesjo::Vector<int> v;
+  alnesjo::vector<int> v;
   for (int i = 0; i < 10; i++) {
     v.insert(0,i);
   }
@@ -56,7 +56,7 @@ TEST(VectorTest, InsertAtFront) {
 }
 
 TEST(VectorTest, Find) {
-  alnesjo::Vector<int> v({1,2,3,4,5,6});
+  alnesjo::vector<int> v({1,2,3,4,5,6});
   EXPECT_EQ(v.begin()+0, v.find(1));
   EXPECT_EQ(v.begin()+1, v.find(2));
   EXPECT_EQ(v.begin()+2, v.find(3));
@@ -66,7 +66,7 @@ TEST(VectorTest, Find) {
 }
 
 TEST(LeftShiftTest, VectorIterator) {
-  alnesjo::Vector<int> v({1,2,3,4,5,6});
+  alnesjo::vector<int> v({1,2,3,4,5,6});
   alnesjo::left_shift(v.begin(), v.end());
   EXPECT_EQ(2, v[0]);
   EXPECT_EQ(3, v[1]);
@@ -77,7 +77,7 @@ TEST(LeftShiftTest, VectorIterator) {
 }
 
 TEST(LeftShiftTest, VectorReverseIterator) {
-  alnesjo::Vector<int> v({1,2,3,4,5,6});
+  alnesjo::vector<int> v({1,2,3,4,5,6});
   alnesjo::left_shift(v.rend(), v.rbegin());
   EXPECT_EQ(6, v[0]);
   EXPECT_EQ(1, v[1]);
@@ -88,7 +88,7 @@ TEST(LeftShiftTest, VectorReverseIterator) {
 }
 
 TEST(ShiftTest, VectorBackAndForth) {
-  alnesjo::Vector<int> v({1,2,3,4,5,6});
+  alnesjo::vector<int> v({1,2,3,4,5,6});
   alnesjo::left_shift(v.begin(), v.end());
   alnesjo::right_shift(v.begin(), v.end());
   alnesjo::right_shift(v.begin(), v.end());

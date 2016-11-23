@@ -17,11 +17,11 @@ namespace alnesjo {
   template <typename It> void right_shift(It begin, It end);
 
   template <typename T>
-  class Vector {
-    template <typename U> friend void swap(Vector<U> &, Vector<U> &);
+  class vector {
+    template <typename U> friend void swap(vector<U> &, vector<U> &);
     static_assert(std::is_move_constructible<T>::value &&
                   std::is_move_assignable<T>::value,
-                  "Vector requires value_type to be move -constructible "
+                  "vector requires value_type to be move -constructible "
                   "and -assignable");
   public:
     typedef T value_type;
@@ -37,20 +37,20 @@ namespace alnesjo {
   public:
 
     // Empty vector with zero capacity.
-    Vector(void);
+    vector(void);
 
     // Count elements initialized to value
-    Vector(size_type count, value_type value = value_type());
+    vector(size_type count, value_type value = value_type());
 
     // Vector containing initializer list elements, preserves order.
-    Vector(std::initializer_list<value_type>);
+    vector(std::initializer_list<value_type>);
 
     // Copy and move construction/assignment.
-    Vector(Vector const & other);
-    Vector(Vector && other);
-    Vector & operator=(Vector other);
+    vector(vector const & other);
+    vector(vector && other);
+    vector & operator=(vector other);
 
-    ~Vector(void);
+    ~vector(void);
 
     // Insert value at the end of vector.
     void push_back(value_type value);
@@ -119,31 +119,31 @@ namespace alnesjo {
   }
 
   template <typename T>
-  void swap(Vector<T> & lhs, Vector<T> & rhs) {
+  void swap(vector<T> & lhs, vector<T> & rhs) {
     std::swap(lhs._capacity, rhs._capacity);
     std::swap(lhs._size, rhs._size);
     std::swap(lhs._array, rhs._array);
   }
 
   template <typename T>
-  inline Vector<T>::Vector(void) : _array(nullptr), _capacity(0), _size(0) {}
+  inline vector<T>::vector(void) : _array(nullptr), _capacity(0), _size(0) {}
 
   template <typename T>
-  inline Vector<T>::Vector(size_type n, value_type val) {
+  inline vector<T>::vector(size_type n, value_type val) {
     _capacity = _size = n;
     _array = new value_type [_capacity];
     std::fill(begin(), end(), val);
   }
 
   template <typename T>
-  inline Vector<T>::Vector(std::initializer_list<value_type> il) {
+  inline vector<T>::vector(std::initializer_list<value_type> il) {
     _capacity = _size = il.size();
     _array = new value_type [_capacity];
     std::copy(il.begin(), il.end(), begin());
   }
 
   template <typename T>
-  inline Vector<T>::Vector(Vector const & other) {
+  inline vector<T>::vector(vector const & other) {
     // allocate new resources and copy contents of other to this
     _capacity = other._capacity;
     _size = other._size;
@@ -152,32 +152,32 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline Vector<T>::Vector(Vector && other) : Vector() {
+  inline vector<T>::vector(vector && other) : vector() {
     swap(*this, other);
   }
 
   template <typename T>
-  inline Vector<T>::~Vector(void) {
+  inline vector<T>::~vector(void) {
     delete [] _array;
   }
 
   template <typename T>
-  inline auto Vector<T>::operator=(Vector<value_type> other)
-    -> Vector<value_type> & {
+  inline auto vector<T>::operator=(vector<value_type> other)
+    -> vector<value_type> & {
     swap(*this, other);
     return *this;
   }
 
   template <typename T>
-  inline void Vector<T>::push_back(value_type val) {
+  inline void vector<T>::push_back(value_type val) {
     insert(_size, val);
   }
 
   template <typename T>
-  inline void Vector<T>::insert(size_type pos, value_type value) {
+  inline void vector<T>::insert(size_type pos, value_type value) {
     if (pos < 0 || pos > _size) {
       throw std::out_of_range("Trying to insert element at position: "
-                              + std::to_string(pos) + ", in a Vector "
+                              + std::to_string(pos) + ", in a vector "
                               "of size: " + std::to_string(size())
                               + ".");
     }
@@ -190,15 +190,15 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline void Vector<T>::clear(void) {
+  inline void vector<T>::clear(void) {
     _size = 0;
   }
 
   template <typename T>
-  inline void Vector<T>::erase(size_type pos) {
+  inline void vector<T>::erase(size_type pos) {
     if (pos < 0 || pos >= _size) {
       throw std::out_of_range("Trying to erase element at position: "
-                              + std::to_string(pos) + ", in a Vector "
+                              + std::to_string(pos) + ", in a vector "
                               "of size: " + std::to_string(size())
                               + ".");
     }
@@ -207,24 +207,24 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline void Vector<T>::fill(const_reference value) {
+  inline void vector<T>::fill(const_reference value) {
     std::fill(begin(), end(), value);
   }
 
   template <typename T>
-  inline auto Vector<T>::size(void) const
+  inline auto vector<T>::size(void) const
     -> size_type {
     return _size;
   }
 
   template <typename T>
-  inline auto Vector<T>::capacity(void) const
+  inline auto vector<T>::capacity(void) const
     -> size_type {
     return _capacity;
   }
 
   template <typename T>
-  inline auto Vector<T>::find(const_reference ref)
+  inline auto vector<T>::find(const_reference ref)
     -> iterator {
     /*
     auto tar = end();
@@ -240,65 +240,65 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline auto Vector<T>::find(const_reference ref) const
+  inline auto vector<T>::find(const_reference ref) const
     -> const_iterator {
     return std::find(begin(), end(), ref);
   }
 
   template <typename T>
-  inline auto Vector<T>::begin(void)
+  inline auto vector<T>::begin(void)
     -> iterator {
     return _array;
   }
 
   template <typename T>
-  inline auto Vector<T>::end(void)
+  inline auto vector<T>::end(void)
     -> iterator {
     return _array+_size;
   }
 
   template <typename T>
-  inline auto Vector<T>::rbegin(void)
+  inline auto vector<T>::rbegin(void)
     -> reverse_iterator {
     return reverse_iterator(begin());
   }
 
   template <typename T>
-  inline auto Vector<T>::rend(void)
+  inline auto vector<T>::rend(void)
     -> reverse_iterator {
     return reverse_iterator(end());
   }
 
   template <typename T>
-  inline auto Vector<T>::begin(void) const
+  inline auto vector<T>::begin(void) const
     -> const_iterator {
     return _array;
   }
 
   template <typename T>
-  inline auto Vector<T>::end(void) const
+  inline auto vector<T>::end(void) const
     -> const_iterator {
     return _array+_size;
   }
 
   template <typename T>
-  inline auto Vector<T>::rbegin(void) const
+  inline auto vector<T>::rbegin(void) const
     -> const_reverse_iterator {
     return const_reverse_iterator(begin());
   }
 
   template <typename T>
-  inline auto Vector<T>::rend(void) const
+  inline auto vector<T>::rend(void) const
     -> const_reverse_iterator {
     return const_reverse_iterator(end());
   }
 
   template <typename T>
-  inline auto Vector<T>::operator[](size_type pos)
+  inline auto vector<T>::operator[](size_type pos)
     -> reference {
     if (pos < 0 || pos >= _size) {
       throw std::out_of_range("Trying to acess element at position: "
-                              + std::to_string(pos) + ", in a Vector "
+                              + std::to_string(pos) + ", in a vector "
                               "of size: " + std::to_string(size())
                               + ".");
     }
@@ -306,7 +306,7 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline auto Vector<T>::operator[](size_type index) const
+  inline auto vector<T>::operator[](size_type index) const
     -> const_reference {
     if (index < 0 || index >= _size) {
       throw std::out_of_range("OUT OF RANGE");
@@ -315,7 +315,7 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline void Vector<T>::_realloc(size_type new_capacity) {
+  inline void vector<T>::_realloc(size_type new_capacity) {
     pointer const new_array = new value_type [new_capacity];
     std::copy(begin(), end(), new_array);
     delete [] _array;
