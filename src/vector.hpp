@@ -154,11 +154,6 @@ namespace alnesjo {
     if (_capacity > 0) {
       _array = new value_type [_capacity];
       std::copy(other.begin(), other.end(), begin());
-      //iterator dest = begin();
-      //const_iterator src = other.begin();
-      //while(dest != end()) {
-      //  *dest++ = *src++;
-      //}
     } else {
       _array = nullptr;
     }
