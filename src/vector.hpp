@@ -10,9 +10,6 @@
 
 namespace alnesjo {
 
-  // Shifts elements ranging between begin and end by one step
-  // TODO: Should probably be moved to another header
-
   template <typename T>
   class vector {
     template <typename U> friend void swap(vector<U> &, vector<U> &);
