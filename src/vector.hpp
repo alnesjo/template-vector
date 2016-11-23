@@ -131,9 +131,7 @@ namespace alnesjo {
   inline Vector<T>::Vector(size_type n, value_type val) {
     _capacity = _size = n;
     _array = new value_type [_capacity];
-    for (auto & elem : *this) {
-      elem = val;
-    }
+    std::fill(begin(), end(), val);
   }
 
   template <typename T>
@@ -209,9 +207,7 @@ namespace alnesjo {
 
   template <typename T>
   inline void Vector<T>::reset(void) {
-    for (auto & elem : *this) {
-      elem = value_type();
-    }
+    std::fill(begin(), end(), value_type());
   }
 
   template <typename T>
