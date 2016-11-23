@@ -100,7 +100,10 @@ namespace alnesjo {
     pointer _array;
     size_type _capacity;
     size_type _size;
-    void _realloc(size_type);
+
+    // Reallocates underlying storage to capacity. Behaviour is undefined
+    // for capacity less than vector size.
+    void _realloc(size_type capacity);
   };
 
   template <typename It> void lshift(It begin, It end) {
@@ -334,11 +337,8 @@ namespace alnesjo {
 
   template <typename T>
   inline void Vector<T>::_realloc(size_type new_capacity) {
-    pointer new_array = new value_type [new_capacity];
-    iterator it = new_array;
-    for (auto & elem : *this) {
-      *it++ = elem;
-    }
+    pointer const new_array = new value_type [new_capacity];
+    std::copy(begin(), end(), new_array);
     if (_capacity > 0) {
       delete [] _array;
     }
