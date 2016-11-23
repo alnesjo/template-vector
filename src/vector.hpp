@@ -10,6 +10,8 @@
 
 namespace alnesjo {
 
+  // Shifts elements ranging between begin and end by one step
+  // TODO: Should probably be moved to another header
   template <typename It> void lshift(It begin, It end);
   template <typename It> void rshift(It begin, It end);
 
