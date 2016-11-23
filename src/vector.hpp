@@ -101,7 +101,7 @@ namespace alnesjo {
     size_type _capacity;
     size_type _size;
 
-    // Reallocates underlying storage to capacity. Behaviour is undefined
+    // Reallocates underlying storage to capacity. Behavior is undefined
     // for capacity less than vector size.
     void _realloc(size_type capacity);
   };
