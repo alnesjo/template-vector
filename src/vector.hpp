@@ -10,6 +10,9 @@
 
 namespace alnesjo {
 
+  template <typename It> void lshift(It begin, It end);
+  template <typename It> void rshift(It begin, It end);
+
   template <typename T>
   class Vector {
     template <typename U> friend void swap(Vector<U> &, Vector<U> &);
@@ -137,7 +140,7 @@ namespace alnesjo {
     _capacity = _size = il.size();
     if (_capacity > 0) {
       _array = new value_type [_capacity];
-      std::copy(il.begin(), il.end(), _array);
+      std::copy(il.begin(), il.end(), begin());
     } else {
       _array = nullptr;
     }
@@ -150,11 +153,12 @@ namespace alnesjo {
     _size = other._size;
     if (_capacity > 0) {
       _array = new value_type [_capacity];
-      iterator dest = begin();
-      const_iterator src = other.begin();
-      while(dest != end()) {
-        *dest++ = *src++;
-      }
+      std::copy(other.begin(), other.end(), begin());
+      //iterator dest = begin();
+      //const_iterator src = other.begin();
+      //while(dest != end()) {
+      //  *dest++ = *src++;
+      //}
     } else {
       _array = nullptr;
     }
@@ -196,7 +200,6 @@ namespace alnesjo {
       _realloc(_capacity ? _capacity*2 : 1);
     }
     _size++;
-    // push back trailing elements
     rshift(begin() + pos, end());
     _array[pos] = value;
   }
@@ -214,7 +217,6 @@ namespace alnesjo {
                               "of size: " + std::to_string(size())
                               + ".");
     }
-    // pull back trailing elements
     lshift(begin() + pos, end());
     _size--;
   }
