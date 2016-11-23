@@ -196,9 +196,6 @@ namespace alnesjo {
       _realloc(_capacity ? _capacity*2 : 1);
     }
     _size++;
-    // reverse_iterator head, tail, tar = rbegin() - pos;
-    // head = tail = rend();
-    // for (head++; head != tar; *tail++ = *head++);
     // push back trailing elements
     rshift(begin() + pos, end());
     _array[pos] = value;
@@ -217,9 +214,6 @@ namespace alnesjo {
                               "of size: " + std::to_string(size())
                               + ".");
     }
-    // iterator head, tail, tar = end();
-    // head = tail = begin() + pos;
-    // for (head++; head != tar; *tail++ = *head++);
     // pull back trailing elements
     lshift(begin() + pos, end());
     _size--;
