@@ -55,13 +55,31 @@ TEST(VectorTest, InsertAtFront) {
   EXPECT_EQ(5, v[4]);
 }
 
-TEST(VectorTest, EraseWithin) {
+TEST(VectorTest, EraseSingle) {
   alnesjo::vector<int> v({1,2,3,4,5,6});
   v.erase(2);
   EXPECT_EQ(1, v[0]);
   EXPECT_EQ(4, v[2]);
   EXPECT_EQ(6, v[4]);
   EXPECT_EQ(5, v.size());
+}
+
+TEST(VectorTest, EraseRange) {
+  alnesjo::vector<int> v({1,2,3,4,5,6});
+  v.erase(v.begin(), v.end()-3);
+  EXPECT_EQ(4, v[0]);
+  EXPECT_EQ(5, v[1]);
+  EXPECT_EQ(6, v[2]);
+  EXPECT_EQ(3, v.size());
+}
+
+TEST(VectorTest, EraseRemove) {
+  alnesjo::vector<int> v({1,2,3,2,5,2});
+  v.erase(std::remove(v.begin(), v.end(), 2), v.end());
+  EXPECT_EQ(1, v[0]);
+  EXPECT_EQ(3, v[1]);
+  EXPECT_EQ(5, v[2]);
+  EXPECT_EQ(3, v.size());
 }
 
 TEST(VectorTest, Find) {
