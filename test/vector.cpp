@@ -55,12 +55,17 @@ TEST(VectorTest, InsertAtFront) {
   EXPECT_EQ(5, v[4]);
 }
 
+TEST(VectorTest, EraseWithin) {
+  alnesjo::vector<int> v({1,2,3,4,5,6});
+  v.erase(2);
+  EXPECT_EQ(1, v[0]);
+  EXPECT_EQ(4, v[2]);
+  EXPECT_EQ(6, v[4]);
+  EXPECT_EQ(5, v.size());
+}
+
 TEST(VectorTest, Find) {
   alnesjo::vector<int> v({1,2,3,4,5,6});
-  EXPECT_EQ(v.begin()+0, v.find(1));
-  EXPECT_EQ(v.begin()+1, v.find(2));
   EXPECT_EQ(v.begin()+2, v.find(3));
-  EXPECT_EQ(v.begin()+3, v.find(4));
-  EXPECT_EQ(v.begin()+4, v.find(5));
   EXPECT_EQ(v.begin()+5, v.find(6));
 }

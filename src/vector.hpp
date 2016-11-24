@@ -56,7 +56,10 @@ namespace alnesjo {
     void clear(void);
 
     // Erase vector entry at pos and pull back end-pos elements.
+    // Alternatively erase elements in range [from, to), or if to > from
+    // [begin, from) and [to, end).
     void erase(size_type pos);
+    void erase(iterator from, iterator to);
 
     // Set all elements to value.
     void fill(const_reference value);
@@ -185,8 +188,20 @@ namespace alnesjo {
                               "of size: " + std::to_string(size())
                               + ".");
     }
-    std::rotate(begin()+pos, begin()+pos+1, end());
-    _size--;
+    erase(begin()+pos, begin()+pos+1);
+  }
+
+  template <typename T>
+  inline void vector<T>::erase(iterator from, iterator to) {
+    if (to > from) {
+      std::rotate(from, to, end());
+      _size -= std::distance(from, to);
+    } else if (from > to) {
+      erase(to, end());
+      erase(begin(), from);
+    } else {
+      // empty range, do nothing
+    }
   }
 
   template <typename T>
@@ -209,16 +224,6 @@ namespace alnesjo {
   template <typename T>
   inline auto vector<T>::find(const_reference ref)
     -> iterator {
-    /*
-    auto tar = end();
-    for (auto it = begin(); it != tar; it++) {
-      if (*it == ref) {
-        tar = it;
-        break;
-      }
-    }
-    return tar;
-    */
     return std::find(begin(), end(), ref);
   }
 
@@ -280,7 +285,7 @@ namespace alnesjo {
   inline auto vector<T>::operator[](size_type pos)
     -> reference {
     if (pos < 0 || pos >= _size) {
-      throw std::out_of_range("Trying to acess element at position: "
+      throw std::out_of_range("Trying to access element at position: "
                               + std::to_string(pos) + ", in a vector "
                               "of size: " + std::to_string(size())
                               + ".");
@@ -289,12 +294,15 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline auto vector<T>::operator[](size_type index) const
+  inline auto vector<T>::operator[](size_type pos) const
     -> const_reference {
-    if (index < 0 || index >= _size) {
-      throw std::out_of_range("OUT OF RANGE");
+    if (pos < 0 || pos >= _size) {
+      throw std::out_of_range("Trying to access element at position: "
+                              + std::to_string(pos) + ", in a vector "
+                              "of size: " + std::to_string(size())
+                              + ".");
     }
-    return _array[index];
+    return _array[pos];
   }
 
   template <typename T>
