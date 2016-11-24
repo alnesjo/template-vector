@@ -1,28 +1,27 @@
 #include "gtest/gtest.h"
 #include "vector.hpp"
 
-TEST(VectorTest, SizeConstructor) {
-  alnesjo::vector<int> v(10);
-  for (int i = 0; i < 10; i++) {
-    EXPECT_EQ(0, v[i]);
-  }
+TEST(VectorTest, InitializerListConstructor) {
+  alnesjo::vector<int> u, v({1,2,3,4,5,6});
+  u.push_back(1);
+  u.push_back(2);
+  u.push_back(3);
+  u.push_back(4);
+  u.push_back(5);
+  u.push_back(6);
+  EXPECT_TRUE(std::equal(u.begin(), u.end(), v.begin()));
 }
 
-TEST(VectorTest, InitializerListConstructor) {
-  alnesjo::vector<char const *> v({"Hej!", "Jag vill", "ingen", "illa."});
-  EXPECT_STREQ("Hej!", v[0]);
-  EXPECT_STREQ("illa.", v[3]);
+TEST(VectorTest, SizeConstructor) {
+  alnesjo::vector<int> u({0,0,0,0,0,0}), v(6);
+  EXPECT_TRUE(std::equal(u.begin(), u.end(), v.begin()));
 }
 
 TEST(VectorTest, CopyConstructor) {
   alnesjo::vector<int> u(10,7), v;
-  auto it = u.begin();
   v = u;
-  EXPECT_NE(it, v.begin());
-  for (int i = 0; i < 10; i++) {
-    EXPECT_EQ(v[i], u[i]);
-  }
-  EXPECT_EQ(v.size(), u.size());
+  EXPECT_NE(u.begin(), v.begin());
+  EXPECT_TRUE(std::equal(u.begin(), u.end(), v.begin()));
   v.fill(0);
   v.clear();
   for (int i = 0; i < 10; i++) {
@@ -45,6 +44,15 @@ TEST(VectorTest, PushBack) {
   EXPECT_EQ(9, v[9]);
   EXPECT_EQ(4, v[4]);
 }
+
+TEST(VectorTest, EmplaceBack) {
+  alnesjo::vector<std::tuple<int,int,int>> u({std::make_tuple(1,2,3),
+                                              std::make_tuple(4,5,6)}), v;
+  v.emplace_back(1,2,3);
+  v.emplace_back(4,5,6);
+  EXPECT_TRUE(std::equal(u.begin(), u.end(), v.begin()));
+}
+
 
 TEST(VectorTest, InsertAtFront) {
   alnesjo::vector<int> v;

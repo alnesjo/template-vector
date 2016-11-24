@@ -12,7 +12,6 @@ namespace alnesjo {
 
   template <typename T>
   class vector {
-    template <typename U> friend void swap(vector<U> &, vector<U> &);
     static_assert(std::is_move_constructible<T>::value &&
                   std::is_move_assignable<T>::value,
                   "vector requires value_type to be move -constructible "
@@ -28,7 +27,6 @@ namespace alnesjo {
     typedef const_pointer const_iterator;
     typedef std::reverse_iterator<iterator> reverse_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
-  public:
 
     // Empty vector with zero capacity.
     vector(void);
@@ -49,8 +47,14 @@ namespace alnesjo {
     // Insert value at the end of vector.
     void push_back(value_type value);
 
+    // Push back value constructed by args.
+    template <typename... Args> void emplace_back(Args... args);
+
     // Insert value at pos. Will push back end-pos elements.
     void insert(size_type pos, value_type value);
+
+    // Insert value constructed by args at pos.
+    template <typename... Args> void emplace(size_type pos, Args... args);
 
     // Clear vector such stat it's size becomes zero.
     void clear(void);
@@ -102,14 +106,9 @@ namespace alnesjo {
     // Reallocates underlying storage to capacity. Behavior is undefined
     // for capacity less than vector size.
     void _realloc(size_type capacity);
-  };
 
-  template <typename T>
-  void swap(vector<T> & lhs, vector<T> & rhs) {
-    std::swap(lhs._capacity, rhs._capacity);
-    std::swap(lhs._size, rhs._size);
-    std::swap(lhs._array, rhs._array);
-  }
+    template <typename U> friend void swap(vector<U> &, vector<U> &);
+  };
 
   template <typename T>
   inline vector<T>::vector(void) : _array(nullptr), _capacity(0), _size(0) {}
@@ -156,7 +155,12 @@ namespace alnesjo {
 
   template <typename T>
   inline void vector<T>::push_back(value_type val) {
-    insert(_size, val);
+    insert(size(), val);
+  }
+
+  template <typename T> template <typename... Args>
+  inline void vector<T>::emplace_back(Args... args) {
+    emplace(size(), args...);
   }
 
   template <typename T>
@@ -173,6 +177,11 @@ namespace alnesjo {
     _size++;
     std::rotate(rend(), rend()+1, rbegin()-pos);
     _array[pos] = value;
+  }
+
+  template <typename T> template <typename... Args>
+  inline void vector<T>::emplace(size_type pos, Args... args) {
+    insert(pos, value_type(args...));
   }
 
   template <typename T>
@@ -312,5 +321,12 @@ namespace alnesjo {
     delete [] _array;
     _array = new_array;
     _capacity = new_capacity;
+  }
+
+  template <typename T>
+  void swap(vector<T> & lhs, vector<T> & rhs) {
+    std::swap(lhs._capacity, rhs._capacity);
+    std::swap(lhs._size, rhs._size);
+    std::swap(lhs._array, rhs._array);
   }
 }
