@@ -63,6 +63,17 @@ TEST(VectorTest, InsertAtFront) {
   EXPECT_EQ(5, v[4]);
 }
 
+TEST(VectorTest, EmplaceAtFront) {
+  alnesjo::vector<std::tuple<int,int>> u({std::make_tuple(1,2),
+                                          std::make_tuple(3,4),
+                                          std::make_tuple(5,6)}), v;
+  v.emplace_back(1,2);
+  v.emplace_back(3,4);
+  v.emplace_back(5,6);
+  EXPECT_TRUE(std::equal(u.begin(), u.end(), v.begin()));
+}
+
+
 TEST(VectorTest, EraseSingle) {
   alnesjo::vector<int> v({1,2,3,4,5,6});
   v.erase(2);
