@@ -44,6 +44,10 @@ namespace alnesjo {
 
     ~vector(void);
 
+    // Reallocates underlying storage to capacity. Does nothing for capacity
+    // less than vector size.
+    void reserve(size_type capacity);
+
     // Insert value at the end of vector.
     void push_back(value_type value);
 
@@ -103,10 +107,6 @@ namespace alnesjo {
     size_type _capacity;
     size_type _size;
 
-    // Reallocates underlying storage to capacity. Behavior is undefined
-    // for capacity less than vector size.
-    void _realloc(size_type capacity);
-
     template <typename U> friend void swap(vector<U> &, vector<U> &);
   };
 
@@ -158,7 +158,8 @@ namespace alnesjo {
     insert(size(), val);
   }
 
-  template <typename T> template <typename... Args>
+  template <typename T>
+  template <typename... Args>
   inline void vector<T>::emplace_back(Args... args) {
     emplace(size(), args...);
   }
@@ -172,14 +173,15 @@ namespace alnesjo {
                               + ".");
     }
     if (_size == _capacity) {
-      _realloc(_capacity ? _capacity*2 : 1);
+      reserve(_capacity ? _capacity*2 : 1);
     }
     _size++;
     std::rotate(rend(), rend()+1, rbegin()-pos);
     _array[pos] = value;
   }
 
-  template <typename T> template <typename... Args>
+  template <typename T>
+  template <typename... Args>
   inline void vector<T>::emplace(size_type pos, Args... args) {
     insert(pos, value_type(args...));
   }
@@ -315,12 +317,14 @@ namespace alnesjo {
   }
 
   template <typename T>
-  inline void vector<T>::_realloc(size_type new_capacity) {
-    pointer const new_array = new value_type [new_capacity];
-    std::copy(begin(), end(), new_array);
-    delete [] _array;
-    _array = new_array;
-    _capacity = new_capacity;
+  inline void vector<T>::reserve(size_type new_capacity) {
+    if (new_capacity > _capacity) {
+      pointer const new_array = new value_type [new_capacity];
+      std::copy(begin(), end(), new_array);
+      delete [] _array;
+      _array = new_array;
+      _capacity = new_capacity;
+    }
   }
 
   template <typename T>
