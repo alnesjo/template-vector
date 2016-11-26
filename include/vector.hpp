@@ -114,10 +114,15 @@ namespace alnesjo {
   inline vector<T>::vector(void) : _array(nullptr), _capacity(0), _size(0) {}
 
   template <typename T>
-  inline vector<T>::vector(size_type n, value_type val) {
-    _capacity = _size = n;
-    _array = new value_type [_capacity];
-    std::fill(begin(), end(), val);
+  inline vector<T>::vector(size_type size, value_type value) {
+    if (size >= 0) {
+      _capacity = _size = size;
+      _array = new value_type [_capacity];
+      std::fill(begin(), end(), value);
+    } else {
+      throw std::length_error("Trying to construct vector of size: "
+                              + std::to_string(size) + ".");
+    }
   }
 
   template <typename T>
