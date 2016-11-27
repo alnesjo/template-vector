@@ -5,7 +5,7 @@
     bool error = false;                         \
     try {                                       \
       expr;                                     \
-    } catch (std::exception e) {                \
+    } catch (...) {                             \
       error = true;                             \
     }                                           \
     EXPECT_TRUE(error);                         \
